@@ -1,8 +1,8 @@
 extends Node2D
 
-onready var wheel_node = get_node("Background/Wheel")
-onready var throttle_node = get_node("Background/Throttle")
-onready var brake_node = get_node("Background/Brake")
+@onready var wheel_node = get_node("Background/Wheel")
+@onready var throttle_node = get_node("Background/Throttle")
+@onready var brake_node = get_node("Background/Brake")
 
 
 # Called when the node enters the scene tree for the first time.

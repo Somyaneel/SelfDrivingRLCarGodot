@@ -73,7 +73,7 @@ func DeleteCar(uuid):
 
 func CreateCar(uuid, manual_control):
 	ResetStatistics()
-	var new_car = CAR.instance()
+	var new_car = CAR.instantiate()
 	new_car.SetId(uuid)
 	new_car.transform = Transform2D(rot_init, pos_init)
 	new_car.scale = Vector2(scale, scale)

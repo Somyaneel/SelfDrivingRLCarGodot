@@ -16,7 +16,7 @@ var game_logic_node
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	server = TCP_Server.new()
+	server = TCPServer.new()
 	server.listen(42424, "*")
 	game_logic_node = get_node("/root/game/GameLogic")
 
@@ -29,7 +29,7 @@ func _process(_delta):
 			tcp_stream.set_no_delay(true)
 			var uuid = UUID.v4()
 			tcp_stream_dict[uuid] = tcp_stream
-			buffer_dict[uuid] = PoolByteArray()
+			buffer_dict[uuid] = PackedByteArray()
 			msg_size_dict[uuid] = int(0)
 	if tcp_stream_dict.size() > 0:
 		CollectData()
@@ -47,7 +47,7 @@ func CollectData():
 			else:
 				var next_char = ""
 				var remaining_attempts = 4 # number of bytes expected to come
-				var size_data = PoolByteArray()
+				var size_data = PackedByteArray()
 				while tcp_stream_dict[key].get_available_bytes() > 0 and remaining_attempts > 0:
 					var return_data = tcp_stream_dict[key].get_data(1) # get char by char
 					var error = return_data[0]
@@ -80,9 +80,9 @@ func CollectData():
 
 func ParseData():
 	for key in buffer_dict:
-		if not buffer_dict[key].empty():
-			var message = buffer_dict[key].subarray(0, msg_size_dict[key]-1)
-			buffer_dict[key] = buffer_dict[key].subarray(msg_size_dict[key], buffer_dict[key].size()-1)
+		if not buffer_dict[key].is_empty():
+			var message = buffer_dict[key].slice(0, msg_size_dict[key])
+			buffer_dict[key] = buffer_dict[key].slice(msg_size_dict[key], buffer_dict[key].size())
 			msg_size_dict[key] = 0
 			#print("idx = " + String(idx) + ": " + message.get_string_from_utf8())
 			match message.get_string_from_utf8():
@@ -130,7 +130,7 @@ func HandleControlCommand(key, command):
 	regex.compile("(?:\\(CONTROL:)(?<throttle>[+-]?\\d*\\.?\\d*);(?<brake>[+-]?\\d*\\.?\\d*);(?<steering>[+-]?\\d*\\.?\\d*)")
 	var result = regex.search(command)
 	if result:
-		if not result.get_string("throttle").empty() and not result.get_string("brake").empty() and not result.get_string("steering").empty():
+		if not result.get_string("throttle").is_empty() and not result.get_string("brake").is_empty() and not result.get_string("steering").is_empty():
 			var throttle : float = float(result.get_string("throttle"))
 			var brake : float = float(result.get_string("brake"))
 			var steering : float = float(result.get_string("steering"))
@@ -145,18 +145,18 @@ func HandleControlCommand(key, command):
 
 func SenseResponse(uuid, max_score, crash, sensor_0, sensor_1, sensor_2, sensor_3, sensor_4, velocity, yaw, pos_x, pos_y):
 	if tcp_stream_dict[uuid]:
-		if tcp_stream_dict[uuid].is_connected_to_host():
-			var response : String = String(max_score) + ";" + String(crash) + ";" + String(sensor_0) + ";" + String(sensor_1) + ";" + String(sensor_2) + ";" + String(sensor_3) + ";" + String(sensor_4) + ";" + String(velocity) + ";" + String(yaw) + ";" + String(pos_x) + ";" + String(pos_y)
-			var retval = tcp_stream_dict[uuid].put_partial_data(response.to_ascii())
+		if tcp_stream_dict[uuid].get_status()==tcp_stream_dict[uuid].STATUS_CONNECTED:
+			var response : String = str(max_score) + ";" + str(crash) + ";" + str(sensor_0) + ";" + str(sensor_1) + ";" + str(sensor_2) + ";" + str(sensor_3) + ";" + str(sensor_4) + ";" + str(velocity) + ";" + str(yaw) + ";" + str(pos_x) + ";" + str(pos_y)
+			var retval = tcp_stream_dict[uuid].put_partial_data(response.to_ascii_buffer())
 			if retval[0]:
-				print(String(uuid) + "Error: " + String(retval[0]))
-				print(String(uuid) + "Data: " + String(retval[1]))
+				print(str(uuid) + "Error: " + str(retval[0]))
+				print(str(uuid) + "Data: " + str(retval[1]))
 
 func RegisterResponse(uuid):
 	if tcp_stream_dict[uuid]:
-		if tcp_stream_dict[uuid].is_connected_to_host():
-			var response : String = String(uuid)
-			var retval = tcp_stream_dict[uuid].put_partial_data(response.to_ascii())
+		if tcp_stream_dict[uuid].get_status()==tcp_stream_dict[uuid].STATUS_CONNECTED:
+			var response : String = str(uuid)
+			var retval = tcp_stream_dict[uuid].put_partial_data(response.to_ascii_buffer())
 			if retval[0]:
-				print(String(uuid) + "Error: " + String(retval[0]))
-				print(String(uuid) + "Data: " + String(retval[1]))
+				print(str(uuid) + "Error: " + str(retval[0]))
+				print(str(uuid) + "Data: " + str(retval[1]))

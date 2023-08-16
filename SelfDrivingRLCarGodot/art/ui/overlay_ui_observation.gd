@@ -1,12 +1,12 @@
 extends Node2D
 
-onready var psi_node = get_node("Background/Psi")
-onready var sensor0_node = get_node("Background/Psi/Sensor0")
-onready var sensor1_node = get_node("Background/Psi/Sensor1")
-onready var sensor2_node = get_node("Background/Psi/Sensor2")
-onready var sensor3_node = get_node("Background/Psi/Sensor3")
-onready var sensor4_node = get_node("Background/Psi/Sensor4")
-onready var velocity_node = get_node("Background/Velocity")
+@onready var psi_node = get_node("Background/Psi")
+@onready var sensor0_node = get_node("Background/Psi/Sensor0")
+@onready var sensor1_node = get_node("Background/Psi/Sensor1")
+@onready var sensor2_node = get_node("Background/Psi/Sensor2")
+@onready var sensor3_node = get_node("Background/Psi/Sensor3")
+@onready var sensor4_node = get_node("Background/Psi/Sensor4")
+@onready var velocity_node = get_node("Background/Velocity")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

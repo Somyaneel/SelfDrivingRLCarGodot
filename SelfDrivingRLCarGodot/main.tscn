@@ -1,90 +1,125 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=7 format=3 uid="uid://cc7mqr26fout7"]
 
-[ext_resource path="res://core/Server.gd" type="Script" id=1]
-[ext_resource path="res://core/track/track.tscn" type="PackedScene" id=2]
-[ext_resource path="res://core/GameLogic.gd" type="Script" id=3]
-[ext_resource path="res://art/ui/overlay_ui_action.tscn" type="PackedScene" id=4]
-[ext_resource path="res://art/ui/overlay_ui_observation.tscn" type="PackedScene" id=5]
-[ext_resource path="res://art/ui/overlay_control.tscn" type="PackedScene" id=6]
+[ext_resource type="Script" path="res://core/Server.gd" id="1"]
+[ext_resource type="PackedScene" path="res://core/track/track.tscn" id="2"]
+[ext_resource type="Script" path="res://core/GameLogic.gd" id="3"]
+[ext_resource type="PackedScene" uid="uid://buwape3ybnhsr" path="res://art/ui/overlay_ui_action.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://art/ui/overlay_ui_observation.tscn" id="5"]
+[ext_resource type="PackedScene" uid="uid://cysej7g5yhfu1" path="res://art/ui/overlay_control.tscn" id="6"]
 
 [node name="game" type="Node2D"]
 
 [node name="GameLogic" type="Node" parent="."]
-script = ExtResource( 3 )
+script = ExtResource("3")
 
-[node name="Track" parent="." instance=ExtResource( 2 )]
+[node name="Track" parent="." instance=ExtResource("2")]
 
 [node name="Car" type="Node" parent="."]
 
 [node name="Server" type="Node" parent="."]
-script = ExtResource( 1 )
+script = ExtResource("1")
 
 [node name="Labels" type="Node" parent="."]
 
 [node name="Score" type="Label" parent="Labels"]
-margin_right = 95.0
-margin_bottom = 15.0
+offset_right = 95.0
+offset_bottom = 15.0
 text = "Max Score:"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Distance" type="Label" parent="Labels"]
-margin_top = 15.0
-margin_right = 95.0
-margin_bottom = 30.0
+offset_top = 15.0
+offset_right = 95.0
+offset_bottom = 30.0
 text = "Max Distance:"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Steps" type="Label" parent="Labels"]
-margin_top = 30.0
-margin_right = 95.0
-margin_bottom = 45.0
+offset_top = 30.0
+offset_right = 95.0
+offset_bottom = 45.0
 text = "Max Steps:"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="MaxScoreLabel" type="Label" parent="Labels"]
-margin_left = 100.0
-margin_right = 150.0
-margin_bottom = 15.0
+offset_left = 100.0
+offset_right = 150.0
+offset_bottom = 15.0
 text = "9999"
-align = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="MaxDistanceLabel" type="Label" parent="Labels"]
-margin_left = 100.0
-margin_top = 15.0
-margin_right = 150.0
-margin_bottom = 30.0
+offset_left = 100.0
+offset_top = 15.0
+offset_right = 150.0
+offset_bottom = 30.0
 text = "500"
-align = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="MaxStepsLabel" type="Label" parent="Labels"]
-margin_left = 100.0
-margin_top = 30.0
-margin_right = 150.0
-margin_bottom = 45.0
+offset_left = 100.0
+offset_top = 30.0
+offset_right = 150.0
+offset_bottom = 45.0
 text = "123"
-align = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Overlay_Control" parent="." instance=ExtResource( 6 )]
-position = Vector2( 247.67, 0 )
+[node name="Overlay_Control" parent="." instance=ExtResource("6")]
+position = Vector2(247.67, 0)
 
-[node name="Overlay_UI_Action" parent="." instance=ExtResource( 4 )]
-position = Vector2( 29.5643, 308.127 )
-scale = Vector2( 1.00773, 0.993197 )
+[node name="Overlay_UI_Action" parent="." instance=ExtResource("4")]
+position = Vector2(29.5643, 308.127)
+scale = Vector2(1.00773, 0.993197)
 
-[node name="Overlay_UI_Observation" parent="." instance=ExtResource( 5 )]
-position = Vector2( 929.931, 308.127 )
+[node name="ActionLabel" parent="Overlay_UI_Action/Background" index="0"]
+offset_left = 1.42105
+offset_top = 5.91321
+offset_right = 321.421
+offset_bottom = 55.9132
+
+[node name="Wheel" parent="Overlay_UI_Action/Background" index="1"]
+offset_left = -61.9271
+offset_top = 0.878967
+offset_right = 261.073
+offset_bottom = 322.879
+
+[node name="Throttle" parent="Overlay_UI_Action/Background" index="2"]
+offset_left = 200.0
+offset_right = 456.0
+metadata/_edit_use_anchors_ = true
+
+[node name="Brake" parent="Overlay_UI_Action/Background" index="3"]
+offset_left = 250.0
+offset_right = 506.0
+
+[node name="Overlay_UI_Observation" parent="." instance=ExtResource("5")]
+position = Vector2(929.931, 308.127)
+
+[node name="ObservationLabel" parent="Overlay_UI_Observation/Background" index="0"]
+layout_mode = 0
+theme_type_variation = &"HeaderLarge"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Velocity" parent="Overlay_UI_Observation/Background" index="1"]
+layout_mode = 0
+offset_left = 150.0
+offset_top = 250.0
+offset_right = 406.0
+offset_bottom = 282.0
+
+[node name="VelocityLabel" parent="Overlay_UI_Observation/Background" index="2"]
+layout_mode = 0
+offset_left = 19.0
+offset_top = 231.0
+offset_right = 80.0
+offset_bottom = 257.0
+
+[node name="Sensor4" parent="Overlay_UI_Observation/Background/Psi" index="1"]
+rotation = 3.14159
+
+[node name="Sensor3" parent="Overlay_UI_Observation/Background/Psi" index="2"]
+rotation = -2.35619
+
+[node name="Sensor2" parent="Overlay_UI_Observation/Background/Psi" index="3"]
+rotation = -1.5708
+
+[node name="Sensor1" parent="Overlay_UI_Observation/Background/Psi" index="4"]
+rotation = -0.785398
+
+[editable path="Overlay_UI_Action"]
+[editable path="Overlay_UI_Observation"]

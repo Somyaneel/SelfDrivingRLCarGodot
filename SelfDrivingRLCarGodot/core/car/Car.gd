@@ -1,4 +1,4 @@
-extends KinematicBody2D
+extends CharacterBody2D
 
 ################################################################################
 ### Constants
@@ -99,7 +99,7 @@ func _physics_process(delta):
 		CalcSensors()
 		SenseReponse()
 		ReportStatistics()
-		self.update()
+		self.queue_redraw()
 
 func WrapAngle(angle):
 	if angle >= 0:
@@ -181,17 +181,19 @@ func CalcKinematicModel():
 	y_dot = velocity_longitudinal * sin(psi+beta)
 
 func UpdateNodes():
-	var velocity : Vector2 = Vector2.ZERO
-	velocity.x = x_dot * game_factor
-	velocity.y = y_dot * game_factor
-	#velocity = move_and_slide(velocity)
-	var collision = move_and_collide(velocity * delta_step)
+	var carVelocity : Vector2 = Vector2.ZERO
+	carVelocity.x = x_dot * game_factor
+	carVelocity.y = y_dot * game_factor
+	#carVelocity = move_and_slide(carVelocity)
+	var collision = move_and_collide(carVelocity * delta_step)
 	crash = false
 	if collision:
 		crash = true
-		velocity = velocity.slide(collision.normal)
+		velocity = velocity.slide(collision.get_normal())
 	# using move_and_slide
-	velocity = move_and_slide(velocity)
+	set_velocity(velocity)
+	move_and_slide()
+	velocity = velocity
 	rotation = psi
 
 func CalcSensors():
@@ -199,7 +201,13 @@ func CalcSensors():
 	for idx in sensor_directions.size():
 		var direction = sensor_directions[idx]
 		var target_position = position + direction.rotated(rotation) * sensor_range
-		var result = space_state.intersect_ray(position, target_position, [self], collision_mask) # ray casting happens in world coordinates, thus scale already is taken into account
+		var params = PhysicsRayQueryParameters2D.new()
+		params.from = position
+		params.to = target_position
+		params.exclude = [self]
+
+		params.collision_mask = collision_mask
+		var result = space_state.intersect_ray(params) # ray casting happens in world coordinates, thus scale already is taken into account
 		if result:
 			target_position = result.position
 		sensor_readings[idx] = (target_position-position).length()
@@ -207,7 +215,7 @@ func CalcSensors():
 func DrawSensors():
 	for idx in sensor_directions.size():
 		var target = sensor_directions[idx] * sensor_readings[idx]
-		self.draw_line(Vector2(0.0, 0.0), target/scale, Color(1, 0, 0, 1), 1.0, true) # this scene is scaled, so drawing must be scaled too
+		self.draw_line(Vector2(0.0, 0.0), target/scale, Color(1, 0, 0, 1), 1.0) # this scene is scaled, so drawing must be scaled too
 
 func SetId(_id):
 	id = _id

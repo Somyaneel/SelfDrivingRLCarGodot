@@ -1,0 +1,7 @@
+res://default_env.tres
+res://main.tscn
+res://art/ui/overlay_ui_action.tscn
+res://art/ui/overlay_control.tscn
+res://art/ui/overlay_control.gd
+res://core/Server.gd
+res://core/car/Car.gd
